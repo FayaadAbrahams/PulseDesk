@@ -64,9 +64,6 @@ Create `appsettings.json` in the project root:
   "AllowedHosts": "*"
 }
 ```
-
-> DO NOT commit `appsettings.json` to source control. Add it to `.gitignore`.
-
 ### 4. Run the API
 
 ```bash
