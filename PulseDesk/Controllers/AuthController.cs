@@ -39,7 +39,7 @@ namespace PulseDesk.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterRequest req)
         {
-            var existingUser = await _db.Users.FirstOrDefaultAsync(u => u.Email == req.Email);
+            var existingUser = await _db.Users.FirstOrDefaultAsync(u => u.Email.ToLower() == req.Email.ToLower());
 
             if (existingUser != null) { return BadRequest(new { message = "Email already in use." }); }
 
@@ -129,7 +129,7 @@ namespace PulseDesk.Controllers
                 return BadRequest(new { message = "Cannot change your own role" });
             }
 
-            var oldRole = user.Id;
+            var oldRole = user.Role;
 
             user.Role = req.Role;
             await _db.SaveChangesAsync();
