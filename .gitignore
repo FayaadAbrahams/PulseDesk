@@ -1,0 +1,4 @@
+*.user
+*.bak 
+*.Backup.tmp 
+serviceDependencies.local.json
