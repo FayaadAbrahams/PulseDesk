@@ -6,8 +6,8 @@ serviceDependencies.local.json
 # Visual Studio & Rider
 .vs/
 .idea/
-*/bin/
-*/obj/
+bin/
+obj/
 
 appsettings.json
 appsettings.Development.json
@@ -24,6 +24,3 @@ npm-debug.log*
 
 .DS_Store
 Thumbs.db
-
-sla/node_modules/
-sla/dist/
