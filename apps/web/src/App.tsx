@@ -22,7 +22,7 @@ function App() {
                 <Route
                     path="/dashboard"
                     element={
-                        <ProtectedRoute roles={["Admin, Agent, User"]}>
+                        <ProtectedRoute roles={["Admin", "Agent", "Customer"]}>
                             <Dashboard/>
                         </ProtectedRoute>
                     }
@@ -31,7 +31,7 @@ function App() {
                 <Route
                     path="/tickets"
                     element={
-                        <ProtectedRoute roles={["Admin, Agent"]}>
+                        <ProtectedRoute roles={["Admin", "Agent"]}>
                             <Tickets/>
                         </ProtectedRoute>
                     }
@@ -40,7 +40,7 @@ function App() {
                 <Route
                     path="/tickets/:id"
                     element={
-                        <ProtectedRoute roles={["Admin, Agent"]}>
+                        <ProtectedRoute roles={["Admin", "Agent"]}>
                             <TicketDetail/>
                         </ProtectedRoute>
                     }
