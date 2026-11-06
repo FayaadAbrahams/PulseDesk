@@ -3,7 +3,11 @@
     "target": "ES2020",
     "composite": true,
     "useDefineForClassFields": true,
-    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "lib": [
+      "ES2020",
+      "DOM",
+      "DOM.Iterable"
+    ],
     "module": "ESNext",
     "skipLibCheck": true,
     "moduleResolution": "bundler",
@@ -14,9 +18,16 @@
     "jsx": "react-jsx",
     "strict": true,
     "paths": {
-      "@/*": ["./src/*"],
-      "include": ["./src", "./src/declarations.d.ts"]
+      "@/*": [
+        "./src/*"
+      ],
+      "include": [
+        "./src",
+        "./src/declarations.d.ts"
+      ]
     }
   },
-  "include": ["src"]
+  "include": [
+    "src"
+  ]
 }
