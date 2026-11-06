@@ -22,5 +22,8 @@ dist/
 .env.production.local
 npm-debug.log*
 
+# Frontend Components
+.react-router/
+
 .DS_Store
 Thumbs.db
