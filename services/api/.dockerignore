@@ -8,12 +8,15 @@
 **/.toolstarget
 **/.vs
 **/.vscode
+**/.idea
 **/*.*proj.user
+**/*.Backup.tmp
 **/*.dbmdl
 **/*.jfm
 **/azds.yaml
 **/bin
 **/charts
+**/compose*.y*ml
 **/docker-compose*
 **/Dockerfile*
 **/node_modules
@@ -28,3 +31,12 @@ README.md
 !.git/config
 !.git/packed-refs
 !.git/refs/heads/**
+
+# Not needed to build the API
+*.mwb
+*.mwb.bak
+db/
+
+# appsettings files are gitignored and may hold real local secrets: never bake them into the image.
+# In Docker, all configuration comes from environment variables (see compose.yaml).
+**/appsettings*.json
