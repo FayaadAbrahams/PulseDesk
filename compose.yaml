@@ -1,0 +1,92 @@
+# PulseDesk local stack.
+#
+#   docker compose up --build      # build and start everything
+#   docker compose down            # stop (keeps the database volume)
+#   docker compose down -v         # stop and delete the database (init.sql runs again next start)
+#
+# All images are Linux images for linux/amd64 and linux/arm64, so the same file runs on
+# Linux, macOS (Intel and Apple Silicon) and Windows (Docker Desktop with WSL 2).
+# Defaults are for local development only. Override them in a .env file (see .env.example).
+#
+# Host ports match what the code already expects:
+#   web 5173 -> the API's CORS policy allows http://localhost:5173
+#   api 5286 -> apps/web/src/api/axios.ts calls http://localhost:5286/api from the browser
+#   db  3307 -> avoids clashing with a MySQL already installed on 3306
+
+name: pulsedesk
+
+services:
+  web:
+    build: ./apps/web
+    init: true
+    environment:
+      PORT: "3000"
+      # Container-to-container traffic uses the service name, not localhost.
+      SLA_URL: http://sla:3001
+    ports:
+      - "5173:3000"
+    depends_on:
+      sla:
+        condition: service_healthy
+
+  sla:
+    build: ./services/sla
+    init: true
+    environment:
+      PORT: "3001"
+    ports:
+      - "3001:3001"
+    healthcheck:
+      # The slim image has no curl, so use Node's built-in fetch.
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3001/health').then(r => process.exit(r.ok ? 0 : 1)).catch(() => process.exit(1))"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+      start_period: 10s
+
+  api:
+    build:
+      context: ./services/api
+      dockerfile: PulseDesk/Dockerfile
+    environment:
+      # Development turns on Swagger at http://localhost:5286/swagger.
+      ASPNETCORE_ENVIRONMENT: Development
+      # "__" maps to ":" in .NET configuration, e.g. JwtSettings__Secret -> JwtSettings:Secret.
+      ConnectionStrings__DefaultConnection: "Server=db;Port=3306;Database=${MYSQL_DATABASE:-pulsedesk};User=${MYSQL_USER:-pulsedesk};Password=${MYSQL_PASSWORD:-pulsedesk-dev}"
+      # HS256 needs a key of at least 32 bytes.
+      JwtSettings__Secret: ${JWT_SECRET:-local-dev-only-secret-change-me-0123456789abcdef}
+      JwtSettings__Issuer: ${JWT_ISSUER:-PulseDesk}
+      JwtSettings__Audience: ${JWT_AUDIENCE:-PulseDesk}
+      JwtSettings__ExpiryDays: ${JWT_EXPIRY_DAYS:-7}
+    ports:
+      - "5286:8080"
+    depends_on:
+      # Program.cs calls ServerVersion.AutoDetect, which connects at startup,
+      # so the API must wait until MySQL accepts connections.
+      db:
+        condition: service_healthy
+
+  db:
+    image: mysql:8.4
+    environment:
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-pulsedesk}
+      MYSQL_USER: ${MYSQL_USER:-pulsedesk}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-pulsedesk-dev}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-pulsedesk-root-dev}
+    ports:
+      - "3307:3306"
+    volumes:
+      - db-data:/var/lib/mysql
+      # Runs once, when the data volume is empty. The API has no EF migrations yet (W1-1).
+      - ./services/api/db/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    healthcheck:
+      # Ping over TCP (127.0.0.1), not the socket: during first-run init MySQL listens on
+      # the socket only, so this stays unhealthy until init.sql has finished.
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -uroot -p\"$$MYSQL_ROOT_PASSWORD\" --silent"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 30s
+
+volumes:
+  db-data:
