@@ -6,14 +6,20 @@
   "scripts": {
     "dev": "react-router dev",
     "build": "react-router build",
+    "start": "react-router-serve ./build/server/index.js",
+    "typecheck": "react-router typegen && tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "lint": "eslint ."
   },
   "dependencies": {
     "@hookform/resolvers": "^5.4.0",
     "@react-router/node": "^8.5.1",
+    "@react-router/serve": "^8.5.1",
     "axios": "^1.14.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "isbot": "^5",
     "lucide-react": "^1.7.0",
     "next-themes": "^0.4.6",
     "radix-ui": "^1.4.3",
@@ -25,8 +31,7 @@
     "sonner": "^2.0.7",
     "tailwind-merge": "^3.5.0",
     "tailwindcss": "^4.2.2",
-    "zod": "^4.4.3",
-    "isbot": "^5"
+    "zod": "^4.4.3"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.4",
@@ -42,6 +47,7 @@
     "eslint-plugin-react-refresh": "^0.5.2",
     "globals": "^17.4.0",
     "typescript": "^6.0.3",
-    "vite": "^8.0.1"
+    "vite": "^8.0.1",
+    "vitest": "^5.1.0"
   }
 }
