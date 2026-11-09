@@ -46,8 +46,7 @@ const SignupForm = ({...props}: ComponentProps<typeof Card>) => {
             navigate('/login');
         } catch (error) {
             if (axios.isAxiosError(error)) {
-                var message = error.response?.data?.message ?? "Registration failed";
-
+                let message = error.response?.data?.message ?? "Registration failed";
                 if (error.response?.data?.message == "Email already in use.") {
                     message = error.response?.data?.message;
                     toast.info(message, {description: "Login or reset your password!", position: "top-center"});
