@@ -13,8 +13,8 @@ export interface AuthContextType {
         password: string,
     ) => Promise<void>;
     logout: () => void;
-    loading: boolean;
 }
+
 export const USER_ROLES = ["Customer", "Agent", "Admin"] as const;
 export type UserRole = (typeof USER_ROLES)[number];
 
