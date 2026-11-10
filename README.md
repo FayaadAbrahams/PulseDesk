@@ -12,11 +12,15 @@ flowchart LR
     api["api<br/>ASP.NET Core"]
     db[(MySQL)]
 
-    browser -->|pages| web
+    browser -->|pages + forms, session cookie| web
     web -->|loader: GET /health| sla
-    browser -->|REST + JWT| api
+    web -->|REST + JWT| api
     api --> db
 ```
+
+### Auth
+
+The web tier is a backend-for-frontend. On login, its server action calls the API, then stores the JWT in a signed, httpOnly, `SameSite=Lax` session cookie. Loaders and actions call the API from the server with that token (`apiFetch` in `apps/web/src/lib/auth.server.ts`); a `401` signs the user out. The browser never sees the token, and the API stays bearer-only.
 
 | Path | Service | Stack |
 |---|---|---|
@@ -55,6 +59,5 @@ Tests and type checks in each Node project: `npm test`, `npm run typecheck`.
 ## Next
 
 - Move the API to PostgreSQL with EF Core migrations
-- Move auth from localStorage to an httpOnly cookie, so pages can render signed-in content on the server
 - Publish ticket events from the API to Redpanda; consume them in the SLA service
 - CI for tests and builds

@@ -4,17 +4,6 @@ export interface User {
     role: UserRole;
 }
 
-export interface AuthContextType {
-    user: User | null;
-    login: (email: string, password: string) => Promise<UserRole>;
-    registerUser: (
-        fullName: string,
-        email: string,
-        password: string,
-    ) => Promise<void>;
-    logout: () => void;
-}
-
 export const USER_ROLES = ["Customer", "Agent", "Admin"] as const;
 export type UserRole = (typeof USER_ROLES)[number];
 

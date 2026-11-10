@@ -20,14 +20,23 @@ import {zodResolver} from "@hookform/resolvers/zod";
 import * as React from "react";
 import * as z from "zod";
 import {RegisterSchema} from "@/validations/register-form";
-import {useNavigate} from "react-router";
-import axios from "axios";
-import {ComponentProps} from "react";
-import {useAuth} from "@/context/auth";
+import {Link, useSubmit} from "react-router";
+import {ComponentProps, useEffect} from "react";
 
-const SignupForm = ({...props}: ComponentProps<typeof Card>) => {
-    const auth = useAuth();
-    const navigate = useNavigate();
+type SignupFormProps = ComponentProps<typeof Card> & { error?: string };
+
+const SignupForm = ({error, ...props}: SignupFormProps) => {
+    const submit = useSubmit();
+
+    // Errors come back from the route's server action (e.g. "Email already in use.").
+    useEffect(() => {
+        if (!error) return;
+        if (error === "Email already in use.") {
+            toast.info(error, {description: "Login or reset your password!", position: "top-center"});
+        } else {
+            toast.error(error, {position: "top-center"});
+        }
+    }, [error]);
 
     const form = useForm({
         resolver: zodResolver(RegisterSchema),
@@ -39,24 +48,9 @@ const SignupForm = ({...props}: ComponentProps<typeof Card>) => {
         },
     })
 
-    async function onSubmit(data: z.infer<typeof RegisterSchema>) {
-        try {
-            await auth.registerUser(data.name, data.email, data.password);
-            navigate('/login');
-        } catch (error) {
-            if (axios.isAxiosError(error)) {
-                if (error.response?.data?.message === "Email already in use.") {
-                    toast.info(error.response.data.message, {
-                        description: "Login or reset your password!",
-                        position: "top-center",
-                    });
-                } else {
-                    toast.error("Registration failed", {position: "top-center"});
-                    console.error(error);
-                }
-            }
-        }
-
+    // Validated in the browser, then posted to the server action; the password is never stored client-side.
+    function onSubmit(data: z.infer<typeof RegisterSchema>) {
+        void submit({name: data.name, email: data.email, password: data.password}, {method: "post"});
     }
 
     return (
@@ -180,7 +174,7 @@ const SignupForm = ({...props}: ComponentProps<typeof Card>) => {
                                             Continue with Google
                                         </Button>
                                         <FieldDescription className="px-6 text-center">
-                                            Already have an account? <a href="/login">Sign in</a>
+                                            Already have an account? <Link to="/login">Sign in</Link>
                                         </FieldDescription>
                                     </Field>
                                 </FieldGroup>

@@ -10,13 +10,20 @@ import {
 import {
     Field,
     FieldDescription,
+    FieldError,
     FieldGroup,
     FieldLabel,
 } from "@/components/ui/field";
 import {Input} from "@/components/ui/input";
 import {ComponentProps} from "react";
+import {Form, Link, useNavigation} from "react-router";
 
-const LoginForm = ({className, ...props}: ComponentProps<"div">) => {
+type LoginFormProps = ComponentProps<"div"> & { error?: string };
+
+const LoginForm = ({className, error, ...props}: LoginFormProps) => {
+    const navigation = useNavigation();
+    const submitting = navigation.state === "submitting";
+
     return (
         <div className="flex min-h-svh w-full items-center justify-center p-6 md:p-10">
             <div className="w-full max-w-sm">
@@ -28,13 +35,17 @@ const LoginForm = ({className, ...props}: ComponentProps<"div">) => {
                             <CardDescription>Let's get to the ticket show.</CardDescription>
                         </CardHeader>
                         <CardContent>
-                            <form>
+                            {/* Posts to the route's server action, so it also works before JavaScript loads. */}
+                            <Form method="post">
                                 <FieldGroup>
+                                    {error && <FieldError>{error}</FieldError>}
                                     <Field>
                                         <FieldLabel htmlFor="email">Email</FieldLabel>
                                         <Input
                                             id="email"
+                                            name="email"
                                             type="email"
+                                            autoComplete="email"
                                             placeholder="danwhoa@example.com"
                                             required
                                         />
@@ -49,20 +60,28 @@ const LoginForm = ({className, ...props}: ComponentProps<"div">) => {
                                                 Forgot your password?
                                             </a>
                                         </div>
-                                        <Input id="password" type="password" required/>
+                                        <Input
+                                            id="password"
+                                            name="password"
+                                            type="password"
+                                            autoComplete="current-password"
+                                            required
+                                        />
                                     </Field>
                                     <Field>
-                                        <Button type="submit">Login</Button>
+                                        <Button type="submit" disabled={submitting}>
+                                            {submitting ? "Logging in…" : "Login"}
+                                        </Button>
                                         <Button variant="outline" type="button">
                                             Login with Google
                                         </Button>
                                         <FieldDescription className="text-center">
                                             Don&apos;t have an account?{" "}
-                                            <a href="/register">Sign up</a>
+                                            <Link to="/register">Sign up</Link>
                                         </FieldDescription>
                                     </Field>
                                 </FieldGroup>
-                            </form>
+                            </Form>
                         </CardContent>
                     </Card>
                 </div>
