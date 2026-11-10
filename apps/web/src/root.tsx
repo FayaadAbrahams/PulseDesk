@@ -1,6 +1,8 @@
 import {Links, Meta, Outlet, Scripts, ScrollRestoration} from "react-router";
 import "./index.css";
+import "./styles/styles.css";
 import type {ReactNode} from "react";
+import {Toaster} from "./components/ui/sonner";
 
 export function Layout({children}: { children: ReactNode }) {
     return (
@@ -14,6 +16,7 @@ export function Layout({children}: { children: ReactNode }) {
             <Links/>
         </head>
         <body>
+        <Toaster/>
         {children}
         <ScrollRestoration/>
         <Scripts/>
