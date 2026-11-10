@@ -6,7 +6,7 @@ export interface User {
 
 export interface AuthContextType {
     user: User | null;
-    login: (email: string, password: string) => Promise<any>;
+    login: (email: string, password: string) => Promise<UserRole>;
     registerUser: (
         fullName: string,
         email: string,

@@ -5,7 +5,6 @@ import {
     CardDescription,
     CardHeader,
     CardTitle,
-
 } from "@/components/ui/card";
 import {
     Field,
@@ -21,10 +20,10 @@ import {zodResolver} from "@hookform/resolvers/zod";
 import * as React from "react";
 import * as z from "zod";
 import {RegisterSchema} from "@/validations/register-form";
-import {useAuth} from "../context/AuthContext";
 import {useNavigate} from "react-router";
 import axios from "axios";
 import {ComponentProps} from "react";
+import {useAuth} from "@/context/auth";
 
 const SignupForm = ({...props}: ComponentProps<typeof Card>) => {
     const auth = useAuth();
@@ -46,13 +45,13 @@ const SignupForm = ({...props}: ComponentProps<typeof Card>) => {
             navigate('/login');
         } catch (error) {
             if (axios.isAxiosError(error)) {
-                let message = error.response?.data?.message ?? "Registration failed";
-                if (error.response?.data?.message == "Email already in use.") {
-                    message = error.response?.data?.message;
-                    toast.info(message, {description: "Login or reset your password!", position: "top-center"});
+                if (error.response?.data?.message === "Email already in use.") {
+                    toast.info(error.response.data.message, {
+                        description: "Login or reset your password!",
+                        position: "top-center",
+                    });
                 } else {
-                    message = "Registration failed";
-                    toast.error(message, {description: message, position: "top-center"});
+                    toast.error("Registration failed", {position: "top-center"});
                     console.error(error);
                 }
             }

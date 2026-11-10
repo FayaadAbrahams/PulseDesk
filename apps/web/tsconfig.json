@@ -1,7 +1,6 @@
 {
   "compilerOptions": {
     "target": "ES2020",
-    "composite": true,
     "useDefineForClassFields": true,
     "lib": [
       "ES2020",
@@ -17,15 +16,16 @@
     "noEmit": true,
     "jsx": "react-jsx",
     "strict": true,
-    "types": ["node"],
-    "rootDirs": [".", "./.react-router/types"],
+    "types": [
+      "node"
+    ],
+    "rootDirs": [
+      ".",
+      "./.react-router/types"
+    ],
     "paths": {
       "@/*": [
         "./src/*"
-      ],
-      "include": [
-        "./src",
-        "./src/declarations.d.ts"
       ]
     }
   },
