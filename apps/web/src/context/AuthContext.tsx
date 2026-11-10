@@ -1,30 +1,20 @@
-import {createContext, useContext, useEffect, useState} from "react";
+import {useEffect, useState} from "react";
 import api from "../api/axios";
 import * as React from 'react';
-import {AuthContextType, isUserRole, User, UserRole} from "@/types/types";
+import {isUserRole, User, UserRole} from "@/types/types";
+import {AuthContext} from "./auth";
 
-const AuthContext = createContext<AuthContextType>({
-    user: null,
-    login: async () => {
-    },
-    registerUser: async () => {
-    },
-    logout: () => {
-    },
-})
 
 export const AuthProvider = ({children}: { children: React.ReactNode }) => {
     const [user, setUser] = useState<User | null>(null);
-    const [loading, setLoading] = useState(true);
-
     useEffect(() => {
         const token: string | null = localStorage.getItem("token");
         const savedUser: string | null = localStorage.getItem("user");
 
         if (token && savedUser) {
+            // eslint-disable-next-line react-hooks/set-state-in-effect -- restores the session from localStorage on mount; TODO replaced by cookie auth in KAN-27
             setUser(JSON.parse(savedUser));
         }
-        setLoading(false);
     }, []);
 
     const login = async (email: string, password: string): Promise<UserRole> => {
@@ -64,5 +54,3 @@ export const AuthProvider = ({children}: { children: React.ReactNode }) => {
         </AuthContext.Provider>
     );
 };
-
-export const useAuth = () => useContext(AuthContext);
