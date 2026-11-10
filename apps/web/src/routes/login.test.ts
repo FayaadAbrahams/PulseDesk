@@ -29,11 +29,18 @@ describe("login route action", () => {
     vi.stubGlobal(
       "fetch",
       vi.fn().mockResolvedValue(
-        jsonResponse({ token: "jwt-123", fullName: "Dan Whoa", email: "dan@example.com", role: "Agent" }),
+        jsonResponse({
+          token: "jwt-123",
+          fullName: "Dan Whoa",
+          email: "dan@example.com",
+          role: "Agent",
+        }),
       ),
     );
 
-    const response = await action(argsFor(loginRequest("dan@example.com", "correct-password")));
+    const response = await action(
+      argsFor(loginRequest("dan@example.com", "correct-password")),
+    );
 
     expect(response).toBeInstanceOf(Response);
     const res = response as Response;
@@ -48,10 +55,16 @@ describe("login route action", () => {
   it("returns an error and sets no cookie when the API rejects the credentials", async () => {
     vi.stubGlobal(
       "fetch",
-      vi.fn().mockResolvedValue(jsonResponse({ message: "Invalid Credentials" }, 401)),
+      vi
+        .fn()
+        .mockResolvedValue(
+          jsonResponse({ message: "Invalid Credentials" }, 401),
+        ),
     );
 
-    const result = await action(argsFor(loginRequest("dan@example.com", "wrong-password")));
+    const result = await action(
+      argsFor(loginRequest("dan@example.com", "wrong-password")),
+    );
 
     expect(result).not.toBeInstanceOf(Response);
     expect(result).toMatchObject({
@@ -61,9 +74,14 @@ describe("login route action", () => {
   });
 
   it("returns a service error instead of crashing when the API is unreachable", async () => {
-    vi.stubGlobal("fetch", vi.fn().mockRejectedValue(new TypeError("fetch failed")));
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockRejectedValue(new TypeError("fetch failed")),
+    );
 
-    const result = await action(argsFor(loginRequest("dan@example.com", "correct-password")));
+    const result = await action(
+      argsFor(loginRequest("dan@example.com", "correct-password")),
+    );
 
     expect(result).toMatchObject({
       data: { error: "Login is unavailable right now. Please try again." },
@@ -73,7 +91,9 @@ describe("login route action", () => {
 
   it("sends the submitted credentials to the API's login endpoint", async () => {
     vi.stubEnv("API_URL", "http://api:8080");
-    const fetchMock = vi.fn().mockResolvedValue(jsonResponse({ message: "Invalid Credentials" }, 401));
+    const fetchMock = vi
+      .fn()
+      .mockResolvedValue(jsonResponse({ message: "Invalid Credentials" }, 401));
     vi.stubGlobal("fetch", fetchMock);
 
     await action(argsFor(loginRequest("dan@example.com", "secret")));

@@ -64,6 +64,7 @@ Create `appsettings.json` in the project root:
   "AllowedHosts": "*"
 }
 ```
+
 ### 4. Run the API
 
 ```bash
@@ -107,44 +108,43 @@ PulseDesk/
 
 ## Database Schema
 
-
 ---
 
 ## API Endpoints
 
 ### Auth
 
-|Method|Endpoint|Description|Auth|
-|---|---|---|---|
-|POST|`/api/auth/register`|Register a new user|Public|
-|POST|`/api/auth/login`|Login and receive JWT token|Public|
+| Method | Endpoint             | Description                 | Auth   |
+| ------ | -------------------- | --------------------------- | ------ |
+| POST   | `/api/auth/register` | Register a new user         | Public |
+| POST   | `/api/auth/login`    | Login and receive JWT token | Public |
 
 ### Tickets
 
-|Method|Endpoint|Description|Auth|
-|---|---|---|---|
-|GET|`/api/tickets`|Get all tickets (customers see own only)|All roles|
-|GET|`/api/tickets/{id}`|Get ticket by ID|All roles|
-|POST|`/api/tickets`|Create a new ticket|Customer|
-|PUT|`/api/tickets/{id}`|Update ticket status/priority/agent|Agent, Admin|
-|DELETE|`/api/tickets/{id}`|Delete a ticket|Admin|
+| Method | Endpoint            | Description                              | Auth         |
+| ------ | ------------------- | ---------------------------------------- | ------------ |
+| GET    | `/api/tickets`      | Get all tickets (customers see own only) | All roles    |
+| GET    | `/api/tickets/{id}` | Get ticket by ID                         | All roles    |
+| POST   | `/api/tickets`      | Create a new ticket                      | Customer     |
+| PUT    | `/api/tickets/{id}` | Update ticket status/priority/agent      | Agent, Admin |
+| DELETE | `/api/tickets/{id}` | Delete a ticket                          | Admin        |
 
 ### Comments
 
-|Method|Endpoint|Description|Auth|
-|---|---|---|---|
-|GET|`/api/tickets/{ticketId}/comments`|Get all comments for a ticket|All roles|
-|POST|`/api/tickets/{ticketId}/comments`|Add a comment to a ticket|All roles|
-|DELETE|`/api/tickets/{ticketId}/comments/{id}`|Delete a comment|Admin|
+| Method | Endpoint                                | Description                   | Auth      |
+| ------ | --------------------------------------- | ----------------------------- | --------- |
+| GET    | `/api/tickets/{ticketId}/comments`      | Get all comments for a ticket | All roles |
+| POST   | `/api/tickets/{ticketId}/comments`      | Add a comment to a ticket     | All roles |
+| DELETE | `/api/tickets/{ticketId}/comments/{id}` | Delete a comment              | Admin     |
 
 ### Dashboard
 
-|Method|Endpoint|Description|Auth|
-|---|---|---|---|
-|GET|`/api/dashboard/stats`|Ticket counts by status and priority|Agent, Admin|
-|GET|`/api/dashboard/agent-workload`|Per agent ticket breakdown|Agent, Admin|
-|GET|`/api/dashboard/recent-activity`|Recent tickets and audit trail|Agent, Admin|
-|GET|`/api/dashboard/users`|All users with activity stats|Admin|
+| Method | Endpoint                         | Description                          | Auth         |
+| ------ | -------------------------------- | ------------------------------------ | ------------ |
+| GET    | `/api/dashboard/stats`           | Ticket counts by status and priority | Agent, Admin |
+| GET    | `/api/dashboard/agent-workload`  | Per agent ticket breakdown           | Agent, Admin |
+| GET    | `/api/dashboard/recent-activity` | Recent tickets and audit trail       | Agent, Admin |
+| GET    | `/api/dashboard/users`           | All users with activity stats        | Admin        |
 
 ---
 
@@ -158,11 +158,11 @@ Authorization: Bearer dhjeauihauihdAWIYUDgaWYeyuawfaAd018923dhabwdaWDawd...
 
 ### Roles
 
-|Role|Permissions|
-|---|---|
-|Customer|Create tickets, view own tickets, add comments|
-|Agent|View all tickets, update status, assign self, view dashboard|
-|Admin|Full access, manage users, delete tickets/comments, view all dashboard data|
+| Role     | Permissions                                                                 |
+| -------- | --------------------------------------------------------------------------- |
+| Customer | Create tickets, view own tickets, add comments                              |
+| Agent    | View all tickets, update status, assign self, view dashboard                |
+| Admin    | Full access, manage users, delete tickets/comments, view all dashboard data |
 
 ---
 
@@ -194,8 +194,8 @@ Tickets are created as `Open` by default. Only Agents and Admins can update the 
 
 **Why soft deletes?** Deleting a user would cut all their tickets and comments. Setting `IsActive = false` keeps the full history and prevents issues if the decision was to lose all tickets, as a business owner it makes more sense to cover your own .
 
-**Why AuditLogs? What is the Audit Log?** 
-Every status, priority and agent change is recorded with before/after values. This gives us a logged experience of everything that happened to a ticket. 
+**Why AuditLogs? What is the Audit Log?**
+Every status, priority and agent change is recorded with before/after values. This gives us a logged experience of everything that happened to a ticket.
 
 ---
 

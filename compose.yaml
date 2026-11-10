@@ -17,7 +17,10 @@ name: pulsedesk
 
 services:
   web:
-    build: ./apps/web
+    # Context is the repo root so the npm workspaces lockfile is visible.
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile
     init: true
     environment:
       PORT: "3000"
@@ -36,7 +39,9 @@ services:
         condition: service_started
 
   sla:
-    build: ./services/sla
+    build:
+      context: .
+      dockerfile: services/sla/Dockerfile
     init: true
     environment:
       PORT: "3001"
@@ -44,7 +49,13 @@ services:
       - "3001:3001"
     healthcheck:
       # The slim image has no curl, so use Node's built-in fetch.
-      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3001/health').then(r => process.exit(r.ok ? 0 : 1)).catch(() => process.exit(1))"]
+      test:
+        [
+          "CMD",
+          "node",
+          "-e",
+          "fetch('http://127.0.0.1:3001/health').then(r => process.exit(r.ok ? 0 : 1)).catch(() => process.exit(1))",
+        ]
       interval: 10s
       timeout: 3s
       retries: 5
@@ -88,7 +99,11 @@ services:
     healthcheck:
       # Ping over TCP (127.0.0.1), not the socket: during first-run init MySQL listens on
       # the socket only, so this stays unhealthy until init.sql has finished.
-      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -uroot -p\"$$MYSQL_ROOT_PASSWORD\" --silent"]
+      test:
+        [
+          "CMD-SHELL",
+          'mysqladmin ping -h 127.0.0.1 -uroot -p"$$MYSQL_ROOT_PASSWORD" --silent',
+        ]
       interval: 5s
       timeout: 5s
       retries: 20

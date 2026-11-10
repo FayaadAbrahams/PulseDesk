@@ -1,0 +1,6 @@
+build
+coverage
+.react-router
+package-lock.json
+services/api
+.prettierignore

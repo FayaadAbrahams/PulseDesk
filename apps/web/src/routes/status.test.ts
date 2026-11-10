@@ -23,7 +23,10 @@ describe("status route loader", () => {
   });
 
   it("returns ok when the SLA service is healthy", async () => {
-    vi.stubGlobal("fetch", vi.fn().mockResolvedValue(jsonResponse({ status: "ok" })));
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockResolvedValue(jsonResponse({ status: "ok" })),
+    );
 
     const result = await loader(args);
 
@@ -36,7 +39,10 @@ describe("status route loader", () => {
 
     await loader(args);
 
-    expect(fetchMock).toHaveBeenCalledWith("http://localhost:3001/health", expect.anything());
+    expect(fetchMock).toHaveBeenCalledWith(
+      "http://localhost:3001/health",
+      expect.anything(),
+    );
   });
 
   it("uses SLA_URL when it is set", async () => {
@@ -46,7 +52,10 @@ describe("status route loader", () => {
 
     await loader(args);
 
-    expect(fetchMock).toHaveBeenCalledWith("http://sla:3001/health", expect.anything());
+    expect(fetchMock).toHaveBeenCalledWith(
+      "http://sla:3001/health",
+      expect.anything(),
+    );
   });
 
   it("passes an abort signal so a slow SLA cannot hang the page", async () => {
@@ -60,7 +69,10 @@ describe("status route loader", () => {
   });
 
   it("returns down when the SLA service is unreachable", async () => {
-    vi.stubGlobal("fetch", vi.fn().mockRejectedValue(new TypeError("fetch failed")));
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockRejectedValue(new TypeError("fetch failed")),
+    );
 
     const result = await loader(args);
 
@@ -68,7 +80,10 @@ describe("status route loader", () => {
   });
 
   it("returns down when the SLA service responds with an error status", async () => {
-    vi.stubGlobal("fetch", vi.fn().mockResolvedValue(jsonResponse({ error: "boom" }, 503)));
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockResolvedValue(jsonResponse({ error: "boom" }, 503)),
+    );
 
     const result = await loader(args);
 
