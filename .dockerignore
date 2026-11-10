@@ -1,0 +1,25 @@
+# Shared by every image built with the repo root as context (apps/web, services/sla).
+# Patterns are anchored at the context root, so "**/" is needed to match inside packages.
+
+# Installed on the host (Windows binaries won't run in a Linux image); each image runs npm ci.
+**/node_modules
+
+# Build output and generated files: each image builds its own.
+**/build
+**/dist
+**/.react-router
+**/coverage
+**/*.tsbuildinfo
+
+# Secrets and local noise.
+**/.env*
+**/npm-debug.log*
+.git
+.idea
+.vscode
+
+# Not needed by the Node images. The .NET API builds from its own context (services/api).
+services/api
+**/Dockerfile
+.dockerignore
+compose.yaml
