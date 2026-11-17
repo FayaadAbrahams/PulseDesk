@@ -242,7 +242,7 @@ namespace PulseDesk.Controllers
                 ChangedByUserId = userId,
                 FieldName = field,
                 OldValue = oldValue,
-                NewValue = newValue
+                NewValue = newValue,
                 ChangedAt = DateTime.UtcNow
             };
 
