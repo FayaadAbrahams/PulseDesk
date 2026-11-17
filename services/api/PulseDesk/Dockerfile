@@ -6,7 +6,7 @@
 # Stage names (base, build, publish, final) match what Visual Studio and Rider container tooling expect.
 
 # Runtime base. Visual Studio "fast mode" debugging also starts from this stage.
-FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS base
+FROM mcr.microsoft.com/dotnet/aspnet:11.0 AS base
 WORKDIR /app
 # .NET 8+ images listen on 8080 by default (ASPNETCORE_HTTP_PORTS).
 EXPOSE 8080
