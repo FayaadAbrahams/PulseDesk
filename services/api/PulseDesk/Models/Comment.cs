@@ -26,7 +26,5 @@ namespace PulseDesk.Models
         [ForeignKey("UserId")]
         public User User { get; set; } = null!;
 
-        [ForeignKey("ChangedByUserId")]
-        public User ChangedBy { get; set; } = null!;
     }
 }

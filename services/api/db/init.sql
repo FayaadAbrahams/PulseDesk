@@ -57,10 +57,8 @@ CREATE TABLE `Comments` (
     `UserId` int NOT NULL,
     `Body` longtext CHARACTER SET utf8mb4 NOT NULL,
     `CreatedAt` datetime(6) NOT NULL,
-    `ChangedByUserId` int NOT NULL,
     CONSTRAINT `PK_Comments` PRIMARY KEY (`Id`),
     CONSTRAINT `FK_Comments_Tickets_TicketId` FOREIGN KEY (`TicketId`) REFERENCES `Tickets` (`Id`) ON DELETE RESTRICT,
-    CONSTRAINT `FK_Comments_Users_ChangedByUserId` FOREIGN KEY (`ChangedByUserId`) REFERENCES `Users` (`Id`) ON DELETE CASCADE,
     CONSTRAINT `FK_Comments_Users_UserId` FOREIGN KEY (`UserId`) REFERENCES `Users` (`Id`) ON DELETE RESTRICT
 ) CHARACTER SET=utf8mb4;
 
@@ -71,7 +69,6 @@ CREATE INDEX `IX_AuditLogs_ChangedByUserId` ON `AuditLogs` (`ChangedByUserId`);
 CREATE INDEX `IX_AuditLogs_TicketId` ON `AuditLogs` (`TicketId`);
 
 
-CREATE INDEX `IX_Comments_ChangedByUserId` ON `Comments` (`ChangedByUserId`);
 
 
 CREATE INDEX `IX_Comments_TicketId` ON `Comments` (`TicketId`);
