@@ -1,0 +1,33 @@
+version: 2
+
+# Weekly, with minor and patch bumps grouped into one PR per ecosystem
+# so the PR list stays short. Major versions still get their own PR.
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+    groups:
+      npm-minor-and-patch:
+        update-types: [minor, patch]
+
+  - package-ecosystem: nuget
+    directory: /services/api/PulseDesk
+    schedule:
+      interval: weekly
+    groups:
+      nuget-minor-and-patch:
+        update-types: [minor, patch]
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+
+  - package-ecosystem: docker
+    directories:
+      - /apps/web
+      - /services/sla
+      - /services/api/PulseDesk
+    schedule:
+      interval: weekly
