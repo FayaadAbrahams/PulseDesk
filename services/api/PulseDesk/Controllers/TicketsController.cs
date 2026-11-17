@@ -181,6 +181,7 @@ namespace PulseDesk.Controllers
             if (req.Status != null && req.Status != ticket.Status)
             {
                 await LogChange(ticket.Id, userId, "Status", ticket.Status.ToString(), req.Status.ToString());
+                ticket.Status = (StatusType)req.Status;
             }
 
             if (req.Priority != null && req.Priority != ticket.Priority)
