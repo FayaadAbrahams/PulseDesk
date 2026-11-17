@@ -15,7 +15,7 @@ USER $APP_UID
 
 # Build on the machine's own platform and cross-compile with -a $TARGETARCH,
 # so an arm64 image builds on an x64 machine (and vice versa) without emulation.
-FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/sdk:10.0 AS build
+FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/sdk:11.0 AS build
 ARG TARGETARCH
 WORKDIR /src
 # Restore first, from the project file alone, so the restore layer is cached until dependencies change.
