@@ -13,7 +13,12 @@ const dbConfig = {
 };
 
 // The API sends and accepts enums as numbers (the C# enum order).
-export const Status = { Open: 0, InProgress: 1, Resolved: 2, Closed: 3 } as const;
+export const Status = {
+  Open: 0,
+  InProgress: 1,
+  Resolved: 2,
+  Closed: 3,
+} as const;
 export const Priority = { Low: 0, Medium: 1, High: 2 } as const;
 
 export type Role = "Customer" | "Agent" | "Admin";
@@ -62,7 +67,9 @@ export async function createUser(role: Role = "Customer"): Promise<TestUser> {
     body: { fullName: `Test ${role}`, email, password },
   });
   if (register.status !== 200) {
-    throw new Error(`Register failed (${register.status}): ${JSON.stringify(register.body)}`);
+    throw new Error(
+      `Register failed (${register.status}): ${JSON.stringify(register.body)}`,
+    );
   }
 
   if (role !== "Customer") {
@@ -73,7 +80,9 @@ export async function createUser(role: Role = "Customer"): Promise<TestUser> {
     body: { email, password },
   });
   if (login.status !== 200) {
-    throw new Error(`Login failed (${login.status}): ${JSON.stringify(login.body)}`);
+    throw new Error(
+      `Login failed (${login.status}): ${JSON.stringify(login.body)}`,
+    );
   }
 
   return { email, token: login.body.token };
@@ -93,7 +102,9 @@ export async function createTicket(
     },
   });
   if (res.status !== 201) {
-    throw new Error(`Create ticket failed (${res.status}): ${JSON.stringify(res.body)}`);
+    throw new Error(
+      `Create ticket failed (${res.status}): ${JSON.stringify(res.body)}`,
+    );
   }
   return res.body.ticketId;
 }
@@ -101,7 +112,10 @@ export async function createTicket(
 async function setRole(email: string, role: Role): Promise<void> {
   const conn = await mysql.createConnection(dbConfig);
   try {
-    await conn.execute("UPDATE Users SET Role = ? WHERE Email = ?", [role, email]);
+    await conn.execute("UPDATE Users SET Role = ? WHERE Email = ?", [
+      role,
+      email,
+    ]);
   } finally {
     await conn.end();
   }
