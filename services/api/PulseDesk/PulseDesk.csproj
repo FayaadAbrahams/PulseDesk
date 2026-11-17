@@ -25,7 +25,7 @@
     <!-- Pomelo 9 supports EF Core 9.0.x only; keep every EF package on 9.0.x until Pomelo 10 ships. -->
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="9.0.0" />
     <!-- Pinned above Pomelo's 2.4.0 for GHSA-473q-m89c-ghf8. -->
-    <PackageReference Include="MySqlConnector" Version="2.6.2" />
+    <PackageReference Include="MySqlConnector" Version="3.0.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
   </ItemGroup>
 
