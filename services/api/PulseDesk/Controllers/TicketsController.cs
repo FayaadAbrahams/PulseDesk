@@ -243,6 +243,7 @@ namespace PulseDesk.Controllers
                 FieldName = field,
                 OldValue = oldValue,
                 NewValue = newValue
+                ChangedAt = DateTime.UtcNow
             };
 
             await _db.AuditLogs.AddAsync(log);
