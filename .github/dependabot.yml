@@ -16,8 +16,24 @@ updates:
     schedule:
       interval: weekly
     groups:
+      # EF Core packages and the MySQL provider must move together, or the API
+      # crashes at runtime with MissingMethodException (see PR #30).
+      efcore:
+        patterns:
+          - "Microsoft.EntityFrameworkCore*"
+          - "Pomelo.EntityFrameworkCore.MySql"
       nuget-minor-and-patch:
         update-types: [minor, patch]
+    ignore:
+      # Pomelo 9 only supports EF Core 9.0.x. Remove once Pomelo 10 is released.
+      - dependency-name: "Microsoft.EntityFrameworkCore*"
+        update-types: [version-update:semver-major]
+      # Swashbuckle 6 needs Microsoft.OpenApi 1.x (3.x broke the build, see PR #31).
+      # Upgrade these two together, by hand.
+      - dependency-name: "Microsoft.OpenApi"
+        update-types: [version-update:semver-major]
+      - dependency-name: "Swashbuckle.AspNetCore"
+        update-types: [version-update:semver-major]
 
   - package-ecosystem: github-actions
     directory: /
